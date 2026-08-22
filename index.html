@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="TrainStation List of All Locomotives">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="List of All Locomotives in the TrainStation Classic Game">
+    <meta property="og:image" content="https://olligtrainstationclassic.github.io/locolist/preview-locolist.png">
+    <meta property="og:url" content="https://olligtrainstationclassic.github.io/locolist">
+
     <title>TrainStation List of All Locomotives</title>
-    <meta name="theme-color" content="#0b0f14">
-<link rel="stylesheet" href="style.css">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="96x96" />
+    <meta name="theme-color" content="#0a0c10">
 
     <!-- Tabulator & Google Fonts -->
     <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_midnight.min.css" rel="stylesheet">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-<style> 
- :root {
+
+     <style>
+        :root {
             --primary: #00d1ff;
-            --bg-dark: #05070a;
-            --panel-bg: #0d1117;
-            --border-glow: 0 0 15px rgba(0, 209, 255, 0.6);
+            --bg-dark: #0a0c10;
+            --panel-bg: #161b22;
+            --border-glow: 0 0 10px rgba(0, 209, 255, 0.4);
             --muted: #8aa0b2;
         }
 
@@ -27,118 +33,145 @@
             color: #e6edf3;
             font-family: 'Roboto Mono', Arial, sans-serif;
             margin: 0;
-            padding: 0;
             overflow-x: hidden;
         }
 
+        /* Header */
         .header-container {
-            background: #000;
-            padding: 30px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(rgba(10, 12, 16, 0.6), rgba(10, 12, 16, 0.6)), 
+                        radial-gradient(circle at center, #1c2128 0%, #0a0c10 100%);
             border-bottom: 1px solid var(--primary);
+            box-shadow: var(--border-glow);
+            text-align: center;
+            padding: 20px 0;
         }
-
         .header-img {
             max-height: 120px;
             filter: drop-shadow(0 0 15px var(--primary));
         }
 
         .topbar {
-            background: #0a0c10;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            background: var(--panel-bg);
+            padding: 15px;
             border-bottom: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .search-wrapper { 
-            width: 100%; 
-            max-width: 600px; 
-            display: flex; 
+
+        .search-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
         }
 
         input#search {
-            width: 100%;
-            background: #000;
+            background: #0d1117;
             color: var(--primary);
             border: 1px solid #30363d;
-            border-radius: 25px;
-            padding: 12px 25px;
+            border-radius: 20px;
+            padding: 10px 20px;
+            flex-grow: 1;
             outline: none;
-            font-size: 16px;
+            transition: border 0.3s;
         }
 
-        input#search:focus {
+            input#search:focus {
             border-color: var(--primary);
-}
+            box-shadow: var(--border-glow);
+        }
 
-        #table-container { padding: 0 10px; background: var(--bg-dark); }
+        /* TABULATOR CORE FIXES */
+        #table {
+            background-color: var(--bg-dark);
+            height: calc(100vh - 250px);
+        }
 
-        /* Tabulator Design-Korrekturen */
-        .tabulator { background-color: transparent !important; border: none !important; }
+        .tabulator {
+            border: none !important;
+            background-color: var(--bg-dark) !important;
+        }
 
+        /* Nur den Header Text Cyan machen */
         .tabulator-header {
+            background-color: #0d1117 !important;
+            border-bottom: 2px solid var(--primary) !important;
+        }
+
+        .tabulator-header .tabulator-col {
             background-color: #0d1117 !important;
             color: var(--primary) !important;
             font-family: 'Chakra Petch', sans-serif;
-            font-size: 15px;
             letter-spacing: 0.7px;
-            border-bottom: 2px solid var(--primary) !important;
-            padding: 3px !important;
-            
+            font-size: 15px;
         }
 
-        .tabulator-col {
-            background-color: #0d1117 !important;
-            border-right: 1px solid #30363d !important;
+        .tabulator-header .tabulator-col-title {
+            color: var(--primary) !important;
         }
 
+        /* Zebra Look Fix - Farben für die Zeilen */
         .tabulator-row {
-            background-color: #0d1117 !important;
-            border-bottom: 1px solid #21262d !important;
+            border-bottom: 1px solid #30363d !important;
+            background-color: #161b22 !important; /* Odd rows */
             color: #c9d1d9 !important;
+            transition: background 0.2s;
+            font-family: 'Roboto Mono', Arial, sans-serif;
         }
 
-        .tabulator-row-even { background-color: #161b22 !important; }
+        .tabulator-row.tabulator-row-even {
+            background-color: #0d1117 !important; /* Even rows */
+        }
 
         .tabulator-row:hover {
         border-bottom: 1px solid var(--primary) !important;
             outline: 1px solid var(--primary);
         }
 
+
+@keyframes glow {
+ 0% {
+   box-shadow: 0 0 5px var(--primary);
+ }
+ 100% {
+   box-shadow: 0 0 10px var(--primary);
+ }
+}
+
         .tabulator-cell {
             padding: 12px !important;
             border-right: 1px solid #30363d !important;
         }
 
-                @media (max-width: 900px) {
+
+        @media (max-width: 900px) {
             .search-info-wrapper { flex-direction: column; }
             .header-img { max-height: 80px; }
         }
-</style>
+    </style>
 </head>
+
 <body>
 
 <div class="header-container">
-    <div class="header-box">
-        <img src="header-locolist.png" class="header-img" alt="Logo">
-
-    </div>
+    <img src="header-locolist.png" class="header-img" alt="Trainstation Locolist">
 </div>
 
 <div class="topbar">
-    <div class="search-wrapper">
-        <input id="search" placeholder="Search Locomotives, Rarity, Type...">
-            </div>
-    <div style="color:var(--muted); font-size: 10px; text-align: center; margin-top: 1rem; margin-left: 1rem;">🔄 Last update 2026-08-21 by Olli G.
-    </div>
-</div>
 
-<div id="table-container">
-    <div id="loco-table"></div>
-</div>
+
+    <div class="search-info-wrapper">
+        <input id="search" placeholder="Search Locomotives, Rarity, Type...">
+        
+            <span style="color:var(--muted); font-size: 10px;">🔄 Last update 2026-08-21 by Olli G.</span>
+        </div>
+    </div>
+
+<div id="loco-table"></div>
 
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlFUj4Krq7L1BBmvS_-EGxgrAdy9HuHA-EIGrkByiyt-13rwnXb02LGSMbYh_CCmUZ_qpZYR-3kXdA/pub?output=xlsx";
