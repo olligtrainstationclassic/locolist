@@ -7,10 +7,11 @@
     <meta property="og:description" content="List of All Locomotives in the TrainStation Classic Game">
     <meta property="og:image" content="https://olligtrainstationclassic.github.io/locolist/preview-locolist.png">
     <meta property="og:url" content="https://olligtrainstationclassic.github.io/locolist">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>TrainStation List of All Locomotives</title>
 
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="96x96" />
+        <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="96x96" />
     <meta name="theme-color" content="#0a0c10">
 
     <!-- Tabulator & Google Fonts -->
@@ -19,21 +20,21 @@
     <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-     <style>
-        :root {
+    <style>
+         :root {
             --primary: #00d1ff;
             --bg-dark: #0a0c10;
             --panel-bg: #161b22;
-            --border-glow: 0 0 10px rgba(0, 209, 255, 0.4);
+            --border-glow: #00d1ff;
             --muted: #8aa0b2;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: #e6edf3;
+            color: #c9d1d9
             font-family: 'Roboto Mono', Arial, sans-serif;
             margin: 0;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* Header */
@@ -45,137 +46,111 @@
             text-align: center;
             padding: 20px 0;
         }
-        .header-img {
-            max-height: 120px;
-            filter: drop-shadow(0 0 15px var(--primary));
-        }
+
+        .header-img { max-height: 120px;
+        filter: drop-shadow(0 0 15px var(--primary));
+     }
 
         .topbar {
             background: var(--panel-bg);
-            padding: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border-bottom: 1px solid #30363d;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
         }
-
-
-        .search-info-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-
         input#search {
+            width: 100%;
+            max-width: 500px;
             background: #0d1117;
             color: var(--primary);
             border: 1px solid #30363d;
             border-radius: 20px;
             padding: 10px 20px;
-            flex-grow: 1;
+            margin-right: 20px;
             outline: none;
-            transition: border 0.3s;
+            font-family: 'Roboto Mono', monospace;
         }
 
-            input#search:focus {
+                    input#search:focus {
             border-color: var(--primary);
             box-shadow: var(--border-glow);
         }
 
-        /* TABULATOR CORE FIXES */
-        #table {
-            background-color: var(--bg-dark);
-            height: calc(100vh - 250px);
+        .tabulator { 
+            background-color: transparent !important; 
+            border: none !important; 
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
         }
 
-        .tabulator {
-            border: none !important;
-            background-color: var(--bg-dark) !important;
-        }
-
-        /* Nur den Header Text Cyan machen */
         .tabulator-header {
-            background-color: #0d1117 !important;
-            border-bottom: 2px solid var(--primary) !important;
-        }
-
-        .tabulator-header .tabulator-col {
             background-color: #0d1117 !important;
             color: var(--primary) !important;
             font-family: 'Chakra Petch', sans-serif;
-            letter-spacing: 0.7px;
+            letter-spacing: .1em;
             font-size: 15px;
+            border-bottom: 2px solid var(--primary) !important;
         }
 
-        .tabulator-header .tabulator-col-title {
-            color: var(--primary) !important;
+        .tabulator-col {
+            background-color: #0d1117 !important;
+            border-right: 1px solid #30363d !important;
         }
 
-        /* Zebra Look Fix - Farben für die Zeilen */
-        .tabulator-row {
-            border-bottom: 1px solid #30363d !important;
-            background-color: #161b22 !important; /* Odd rows */
-            color: #c9d1d9 !important;
-            transition: background 0.2s;
-            font-family: 'Roboto Mono', Arial, sans-serif;
+        /* Zentrierung der Header-Titel */
+        .header-center .tabulator-col-content {
+            text-align: center !important;
         }
 
-        .tabulator-row.tabulator-row-even {
-            background-color: #0d1117 !important; /* Even rows */
-        }
-
+        .tabulator-row { 
+            background-color: #161b22 !important; 
+            color: #c9d1d9 !important; 
+            border-bottom: 1px solid #30363d !important; }
+        .tabulator-row-even { 
+            background-color: #0d1117 !important; }
+        
         .tabulator-row:hover {
         border-bottom: 1px solid var(--primary) !important;
             outline: 1px solid var(--primary);
         }
 
-
-@keyframes glow {
- 0% {
-   box-shadow: 0 0 5px var(--primary);
- }
- 100% {
-   box-shadow: 0 0 10px var(--primary);
- }
-}
-
-        .tabulator-cell {
-            padding: 12px !important;
+        .tabulator-cell { 
+            padding: 12px 8px !important; 
             border-right: 1px solid #30363d !important;
         }
 
-
-        @media (max-width: 900px) {
-            .search-info-wrapper { flex-direction: column; }
-            .header-img { max-height: 80px; }
+        /* BREITE SCROLLBAR */
+        .tabulator-tableholder::-webkit-scrollbar { width: 18px; height: 18px; }
+        .tabulator-tableholder::-webkit-scrollbar-track { background: #0a0c10; }
+        .tabulator-tableholder::-webkit-scrollbar-thumb { 
+            background: #30363d; 
+            border-radius: 10px; 
+            border: 3px solid #0a0c10;
         }
+        .tabulator-tableholder::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     </style>
 </head>
-
 <body>
 
 <div class="header-container">
-    <img src="header-locolist.png" class="header-img" alt="Trainstation Locolist">
+    
+        <img src="header-locolist.png" class="header-img" alt="Logo">
+        
+    </div>
 </div>
 
 <div class="topbar">
+    <input id="search" placeholder="Search Name, Era, Rarity ...">
+<span style="color:var(--muted); font-size: 10px;">🔄 Last update 2026-08-21 by Olli G.</span>
+</div>
 
-
-    <div class="search-info-wrapper">
-        <input id="search" placeholder="Search Locomotives, Rarity, Type...">
-        
-            <span style="color:var(--muted); font-size: 10px;">🔄 Last update 2026-08-21 by Olli G.</span>
-        </div>
-    </div>
-
-<div id="loco-table"></div>
+<div id="table-container">
+    <div id="loco-table"></div>
+</div>
 
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlFUj4Krq7L1BBmvS_-EGxgrAdy9HuHA-EIGrkByiyt-13rwnXb02LGSMbYh_CCmUZ_qpZYR-3kXdA/pub?output=xlsx";
-let table;
 
 function loadData() {
     fetch(sheetURL)
@@ -183,45 +158,71 @@ function loadData() {
     .then(data => {
         const workbook = XLSX.read(data, {type: 'array'});
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        
-        // Rohdaten als Array von Arrays lesen
         const rawRows = XLSX.utils.sheet_to_json(sheet, {header: 1});
 
-        // Die erste Zeile überspringen (das "ALL LOCOMOTIVES..." Label)
-        // Die zweite Zeile (Index 1) sind unsere echten Header
         const headerNames = rawRows[1];
-        const dataRows = rawRows.slice(2); // Die eigentlichen Daten ab Zeile 3
+        const dataRows = rawRows.slice(2);
 
-        // Daten für Tabulator aufbereiten
         const formattedData = dataRows.map(row => {
             let obj = {};
-            headerNames.forEach((h, i) => {
-                obj[h] = row[i] || "";
-            });
+            headerNames.forEach((h, i) => { obj[h] = row[i] || ""; });
             return obj;
         });
 
-        const columns = headerNames.map(name => ({
-            title: name,
-            field: name,
-            headerSort: true,
-            hozAlign: "left",
-            formatter: "html"
-        }));
+        const columns = headerNames.map(name => {
+            let config = { 
+                title: name, 
+                field: name, 
+                headerSort: true,
+                resizable: false,
+                vertAlign: "middle"
+            };
 
-        table = new Tabulator("#loco-table", {
+            const n = name.toLowerCase();
+            
+            if (n.includes("id")) { 
+                config.width = 75; 
+                config.sorter = "number";
+                config.hozAlign = "center";
+                config.headerHozAlign = "center"; // Header Titel zentriert
+                config.cssClass = "header-center";
+            }
+            else if (n.includes("era")) { config.width = 110; }
+            else if (n.includes("rarity")) { config.width = 100; }
+            else if (n.includes("power")) { 
+                config.width = 90; 
+                config.hozAlign = "center";
+                config.headerHozAlign = "center"; // Header Titel zentriert
+                config.cssClass = "header-center";
+            }
+            else if (n.includes("museum")) { 
+                config.width = 140; // Erhöht für "In Museum?"
+                config.hozAlign = "center";
+                config.headerHozAlign = "center"; // Header Titel zentriert
+                config.cssClass = "header-center";
+            }
+            else { 
+                config.widthGrow = 1;
+                config.minWidth = 150; 
+            }
+
+            return config;
+        });
+
+        const table = new Tabulator("#loco-table", {
             data: formattedData,
             layout: "fitColumns",
             columns: columns,
-            height: "calc(100vh - 220px)",
+            height: "calc(100vh - 155px)",
+            initialSort: [{column: headerNames[0], dir: "asc"}],
+        });
+
+        document.getElementById("search").addEventListener("keyup", function() {
+            let val = this.value.toLowerCase();
+            table.setFilter(data => Object.values(data).some(v => String(v).toLowerCase().includes(val)));
         });
     });
 }
-
-document.getElementById("search").addEventListener("keyup", function() {
-    let val = this.value.toLowerCase();
-    if(table) table.setFilter(data => Object.values(data).some(v => String(v).toLowerCase().includes(val)));
-});
 
 loadData();
 </script>
