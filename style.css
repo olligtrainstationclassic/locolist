@@ -1,0 +1,99 @@
+ 
+ :root {
+            --primary: #00d1ff;
+            --bg-dark: #05070a;
+            --panel-bg: #0d1117;
+            --border-glow: 0 0 15px rgba(0, 209, 255, 0.6);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e6edf3;
+            font-family: 'Roboto Mono', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .header-container {
+            background: #000;
+            padding: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--primary);
+        }
+
+        .header-img {
+            max-height: 120px;
+            filter: drop-shadow(0 0 15px var(--primary));
+        }
+
+        .topbar {
+            background: #0a0c10;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .search-wrapper { width: 100%; max-width: 600px; }
+
+        input#search {
+            width: 100%;
+            background: #000;
+            color: var(--primary);
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            padding: 12px 25px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input#search:focus {
+            border-color: var(--primary);
+}
+
+        #table-container { padding: 0 10px; background: var(--bg-dark); }
+
+        /* Tabulator Design-Korrekturen */
+        .tabulator { background-color: transparent !important; border: none !important; }
+
+        .tabulator-header {
+            background-color: #0d1117 !important;
+            color: var(--primary) !important;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            letter-spacing: 0.7px;
+            border-bottom: 2px solid var(--primary) !important;
+            padding: 3px !important;
+            
+        }
+
+        .tabulator-col {
+            background-color: #0d1117 !important;
+            border-right: 1px solid #30363d !important;
+        }
+
+        .tabulator-row {
+            background-color: #0d1117 !important;
+            border-bottom: 1px solid #21262d !important;
+            color: #c9d1d9 !important;
+        }
+
+        .tabulator-row-even { background-color: #161b22 !important; }
+
+        .tabulator-row:hover {
+        border-bottom: 1px solid var(--primary) !important;
+            outline: 1px solid var(--primary);
+        }
+
+        .tabulator-cell {
+            padding: 12px !important;
+            border-right: 1px solid #30363d !important;
+        }
+
+                @media (max-width: 900px) {
+            .search-info-wrapper { flex-direction: column; }
+            .header-img { max-height: 80px; }
+        }
