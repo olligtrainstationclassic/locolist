@@ -1,2 +1,1 @@
-# locolist
-TrainStation List of All Locomotives
+TrainStation Classic List of All Locomotives
