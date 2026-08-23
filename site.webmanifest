@@ -15,7 +15,9 @@
       "purpose": "maskable"
     }
   ],
+"start_url": "/locolist/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone"
+"orientation": "portrait"
 }
