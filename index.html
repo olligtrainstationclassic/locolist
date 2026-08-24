@@ -7,7 +7,7 @@
     <meta property="og:description" content="List of All Locomotives in the TrainStation Classic Game">
     <meta property="og:image" content="https://olligtrainstationclassic.github.io/locolist/preview-locolist.png">
     <meta property="og:url" content="https://olligtrainstationclassic.github.io/locolist">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     
     <title>TrainStation List of All Locomotives</title>
 
@@ -57,7 +57,7 @@
             padding: 20px 0;
         }
 
-        .header-img { max-height: 120px;
+        .header-img { max-height: 100px;
         filter: drop-shadow(0 0 15px var(--primary));
      }
 
@@ -67,7 +67,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid #30363d;
+            border-bottom: 1px solid var(--primary);
         }
         input#search {
             width: 100%;
@@ -82,14 +82,18 @@
             font-family: 'Roboto Mono', monospace;
         }
 
-                    input#search:focus {
+        input#search:focus {
             border-color: var(--primary);
             box-shadow: var(--border-glow);
         }
 
         .tabulator { 
+            width: fit-content; 
+            margin-top: 0px !important;            
+            margin: 20px auto;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
             background-color: transparent !important; 
-            border: none !important; 
             font-family: 'Roboto Mono', monospace;
             font-size: 14px;
         }
@@ -100,7 +104,8 @@
             font-family: 'Chakra Petch', sans-serif;
             letter-spacing: .1em;
             font-size: 15px;
-            border-bottom: 2px solid var(--primary) !important;
+            border-top: 1px solid var(--primary) !important;
+            border-bottom: 1px solid var(--primary) !important;
             padding: 4px 0px;
         }
 
@@ -205,6 +210,9 @@ function loadData() {
             }
             else if (n.includes("era")) { config.width = 110; }
             else if (n.includes("rarity")) { config.width = 100; }
+            else if (n.includes("name")) { 
+                config.width = 380; // Fixe Breite: ca. 35-38 Zeichen in Roboto Mono
+            }
             else if (n.includes("power")) { 
                 config.width = 90; 
                 config.hozAlign = "center";
@@ -244,3 +252,4 @@ loadData();
 </script>
 </body>
 </html>
+
