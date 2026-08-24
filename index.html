@@ -2,39 +2,265 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta property="og:title" content="TrainStation List of All Locomotives">
+    <meta name="viewport" content="width=1024">
+    
+<!-- von Git eingefügt -->
+        <meta property="og:title" content="TrainStation List of All Locomotives">
     <meta property="og:type" content="website">
     <meta property="og:description" content="List of All Locomotives in the TrainStation Classic Game">
     <meta property="og:image" content="https://olligtrainstationclassic.github.io/locolist/preview-locolist.png">
     <meta property="og:url" content="https://olligtrainstationclassic.github.io/locolist">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>TrainStation List of All Locomotives</title>
-
-    <link rel="icon" type="image/png" href="/locolist/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="/locolist/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/locolist/favicon.svg" />
 <link rel="shortcut icon" href="/locolist/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/locolist/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="TrainStation List of All Locomotives" />
 <link rel="manifest" href="/locolist/site.webmanifest" />
-
-        
-    <meta name="theme-color" content="#0a0c10">
+<meta name="theme-color" content="#0a0c10">
 <meta name="msapplication-TileColor" content="#111111"> 
     
-    <!-- Tabulator & Google Fonts -->
+    <!-- PWA Tags für Vollbild ohne Browserleiste -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>TrainStation Locomotive List</title>
+
     <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_midnight.min.css" rel="stylesheet">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-         :root {
+        :root {
             --primary: #00d1ff;
             --bg-dark: #0a0c10;
             --panel-bg: #161b22;
             --border-glow: #00d1ff;
             --muted: #8aa0b2;
+            --text: #c9d1d9;
+            --border-bottom: #30363d;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Roboto Mono', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Zentriert den Inhalt horizontal */
+            min-height: 100vh;
+            overflow-y: auto; 
+        }
+
+        .header-container {
+            width: 100%;
+            background: linear-gradient(rgba(10, 12, 16, 0.6), rgba(10, 12, 16, 0.6)), 
+                        radial-gradient(circle at center, #1c2128 0%, #0a0c10 100%);
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid var(--primary);
+                position: fixed; /* Klebt oben */
+    top: 0;
+    z-index: 1000;
+        }
+
+
+        .header-img { 
+            max-height: 100px;
+            filter: drop-shadow(0 0 15px var(--primary));
+ }
+
+        .topbar {
+            width: 100%;
+            background: var(--panel-bg);
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid var(--primary);
+            border-bottom: 1px solid var(--primary);
+            align-items: center;
+            position: fixed; /* Klebt unter dem Header */
+            top: 135px; /* Höhe des Headers (anpassen falls nötig) */
+            z-index: 1001;
+}
+
+        input#search {
+            width: 500px;
+            background: #0d1117;
+            color: var(--primary);
+            border: 1px solid var(--border-bottom);
+            border-radius: 20px;
+            padding: 10px 20px;
+            outline: none;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        input#search:focus {
+            border-color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Container für die zentrierte Tabelle mit blauen Rändern */
+        #main-wrapper {
+            width: fit-content;
+            margin-top: 217px; /* Platzhalter, damit Tabelle nicht unter fixem Header startet */
+            margin-bottom: 20px;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+            background: var(--bg-dark);
+        }
+
+        .tabulator { 
+            background-color: transparent !important; 
+            border: none !important; 
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+        }
+
+        .tabulator-header {
+            background-color: #0d1117 !important;
+            color: var(--primary) !important;
+            font-family: 'Chakra Petch', sans-serif;
+            border-bottom: 2px solid var(--primary) !important;
+            border-top: 1px solid var(--primary) !important;
+            letter-spacing: .1em;
+            font-size: 15px;
+            padding: 4px 0px;
+        }
+
+        .tabulator-col {
+            background-color: #0d1117 !important;
+        }
+
+        .header-center .tabulator-col-content {
+            text-align: center !important;
+        }
+
+        .tabulator-row { 
+            background-color: #161b22 !important; 
+            color: var(--text) !important; 
+            border-bottom: 1px solid var(--border-bottom) !important; 
+        }
+        .tabulator-row-even { 
+            background-color: #0d1117 !important; 
+        }
+
+        .tabulator-row:hover {
+        border-bottom: 1px solid var(--primary) !important;
+            outline: 1px solid var(--primary);
+        }
+
+        
+        .tabulator-cell { 
+            padding: 12px 10px !important; 
+            border-right: 1px solid var(--border-bottom) !important;
+            
+        }
+
+        /* Mobile Scroll-Verhalten */
+        .tabulator-tableholder {
+            overflow: visible !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+
+        <img src="header-locolist.png" class="header-img" alt="Logo">
+    
+    </div>
+</div>
+
+<div class="topbar">
+    <input id="search" placeholder="Search Name, Era, Rarity ...">
+<span style="color:var(--muted); margin-left: 20px; font-size: 10px;">🔄 Last update 2026-08-21 by Olli G.</span>
+
+</div>
+
+<!-- Umschließender Div für Zentrierung und blaue Ränder -->
+<div id="main-wrapper">
+    <div id="loco-table"></div>
+</div>
+
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlFUj4Krq7L1BBmvS_-EGxgrAdy9HuHA-EIGrkByiyt-13rwnXb02LGSMbYh_CCmUZ_qpZYR-3kXdA/pub?output=xlsx";
+
+function loadData() {
+    fetch(sheetURL)
+    .then(res => res.arrayBuffer())
+    .then(data => {
+        const workbook = XLSX.read(data, {type: 'array'});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rawRows = XLSX.utils.sheet_to_json(sheet, {header: 1});
+
+        const headerNames = rawRows[1];
+        const dataRows = rawRows.slice(2);
+
+        const formattedData = dataRows.map(row => {
+            let obj = {};
+            headerNames.forEach((h, i) => { obj[h] = row[i] || ""; });
+            return obj;
+        });
+
+        const columns = headerNames.map(name => {
+            let config = { 
+                title: name, 
+                field: name, 
+                headerSort: true,
+                resizable: false,
+                vertAlign: "middle"
+            };
+
+            const n = name.toLowerCase();
+            
+            if (n.includes("id")) { 
+                config.width = 75; 
+                config.sorter = "number";
+                config.hozAlign = "center";
+                config.headerHozAlign = "center";
+                config.cssClass = "header-center";
+            }
+            else if (n.includes("era")) { config.width = 110; }
+            else if (n.includes("rarity")) { config.width = 110; }
+            else if (n.includes("name")) { 
+                config.width = 380; // Fixe Breite: ca. 35-38 Zeichen in Roboto Mono
+            }
+            else if (n.includes("power")) { 
+                config.width = 90; 
+                config.hozAlign = "center";
+                config.headerHozAlign = "center";
+                config.cssClass = "header-center";
+            }
+            else if (n.includes("museum")) { 
+                config.width = 145; 
+                config.hozAlign = "center";
+                config.headerHozAlign = "center";
+                config.cssClass = "header-center";
+            }
+            return config;
+        });
+
+        const table = new Tabulator("#loco-table", {
+            data: formattedData,
+            layout: "fitData", // Passt die Tabellengröße an die Summe der fixen Spalten an
+            columns: columns,
+        });
+
+        document.getElementById("search").addEventListener("keyup", function() {
+            let val = this.value.toLowerCase();
+            table.setFilter(data => Object.values(data).some(v => String(v).toLowerCase().includes(val)));
+        });
+    });
+}
+
+loadData();
+</script>
+</body>
+</html>            --muted: #8aa0b2;
         }
 
         body {
