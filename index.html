@@ -8,7 +8,6 @@
     <meta property="og:image" content="https://olligtrainstationclassic.github.io/locolist/preview-locolist.png">
     <meta property="og:url" content="https://olligtrainstationclassic.github.io/locolist">
     
-    
     <title>TrainStation List of All Locomotives</title>
 
     <link rel="icon" type="image/png" href="/locolist/favicon-96x96.png" sizes="96x96" />
@@ -18,15 +17,16 @@
 <meta name="apple-mobile-web-app-title" content="TrainStation List of All Locomotives" />
 <link rel="manifest" href="/locolist/site.webmanifest" />
 
-        
-    <meta name="theme-color" content="#0a0c10">
-<meta name="msapplication-TileColor" content="#111111"> 
+<!-- Das hier macht die Browser-Leiste dunkel -->        
+<meta name="theme-color" content="#0a0c10">
+<meta name="msapplication-TileColor" content="#0a0c10"> 
     
     <!-- Tabulator & Google Fonts -->
     <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_midnight.min.css" rel="stylesheet">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
          :root {
@@ -35,16 +35,18 @@
             --panel-bg: #161b22;
             --border-glow: #00d1ff;
             --muted: #8aa0b2;
+            --text: #d8e1ea;
+            --border: #30363d;
         }
 
         [v-cloak] { display: none; }
 
         body {
             background-color: var(--bg-dark);
-            color: #c9d1d9
+            color: var(--text);
             font-family: 'Roboto Mono', Arial, sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* Header */
@@ -64,17 +66,18 @@
         .topbar {
             background: var(--panel-bg);
             padding: 15px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid #30363d;
+            gap: 10px;
         }
         input#search {
             width: 100%;
             max-width: 500px;
             background: #0d1117;
             color: var(--primary);
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
             border-radius: 20px;
             padding: 10px 20px;
             margin-right: 20px;
@@ -85,15 +88,17 @@
         input#search:focus {
             border-color: var(--primary);
             box-shadow: var(--border-glow);
-        }   
+        }  
+        
+                /* TABULATOR CORE FIXES */
+        #table {
+            background-color: var(--bg-dark);
+            height: calc(100vh - 250px);
+        }
 
         .tabulator { 
-            width: fit-content; 
-            margin-top: 0px !important;            
-            margin: 20px auto;
-            border-left: 1px solid var(--primary);
-            border-right: 1px solid var(--primary);
-            background-color: transparent !important; 
+            
+            background-color: var(--bg-dark) !important;
             font-family: 'Roboto Mono', monospace;
             font-size: 14px;
         }
@@ -110,7 +115,7 @@
 
         .tabulator-col {
             background-color: #0d1117 !important;
-            border-right: 1px solid #30363d !important;
+            border-right: 1px solid var(--border) !important;
         }
 
         /* Zentrierung der Header-Titel */
@@ -121,7 +126,7 @@
         .tabulator-row { 
             background-color: #161b22 !important; 
             color: #c9d1d9 !important; 
-            border-bottom: 1px solid #30363d !important; }
+            border-bottom: 1px solid var(--border) !important; }
         .tabulator-row-even { 
             background-color: #0d1117 !important; }
         
@@ -132,14 +137,14 @@
 
         .tabulator-cell { 
             padding: 12px 8px !important; 
-            border-right: 1px solid #30363d !important;
+            border-right: 1px solid var(--border) !important;
         }
 
         /* BREITE SCROLLBAR */
         .tabulator-tableholder::-webkit-scrollbar { width: 18px; height: 18px; }
         .tabulator-tableholder::-webkit-scrollbar-track { background: #0a0c10; }
         .tabulator-tableholder::-webkit-scrollbar-thumb { 
-            background: #30363d; 
+            background: var(--border); 
             border-radius: 10px; 
             border: 3px solid #0a0c10;
         }
@@ -147,7 +152,7 @@
         
         @media (max-width: 900px) {
             .search-info-wrapper { flex-direction: column; }
-            .header-img { max-height: 50px; }
+            .header-img { max-height: 80px; }
         }
         
     </style>
@@ -162,7 +167,7 @@
 
 <div class="topbar">
     <input id="search" placeholder="Search Name, Era, Rarity ...">
-<span style="color:var(--muted); font-size: 10px;">🔄 Last update 2026-09-04 by Olli G.</span>
+<span style="color:var(--muted); font-size: 10px;">🔄 Last update 2026-09-02 by Olli G.</span>
 </div>
 
 <div id="table-container">
@@ -209,9 +214,7 @@ function loadData() {
             }
             else if (n.includes("era")) { config.width = 110; }
             else if (n.includes("rarity")) { config.width = 100; }
-            else if (n.includes("name")) { 
-                config.width = 380; // Fixe Breite: ca. 35-38 Zeichen in Roboto Mono
-            }
+            
             else if (n.includes("power")) { 
                 config.width = 90; 
                 config.hozAlign = "center";
@@ -226,7 +229,7 @@ function loadData() {
             }
             else { 
                 config.widthGrow = 1;
-                config.minWidth = 150; 
+                config.minWidth = 250; 
             }
 
             return config;
@@ -236,7 +239,8 @@ function loadData() {
             data: formattedData,
             layout: "fitColumns",
             columns: columns,
-            height: "calc(100vh - 155px)",
+            height: "calc(90vh - 155px)",
+            responsiveLayout: "collapse",
             initialSort: [{column: headerNames[0], dir: "asc"}],
         });
 
